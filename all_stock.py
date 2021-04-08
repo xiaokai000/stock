@@ -2,7 +2,7 @@ import baostock as bs
 import pandas as pd
 from pymongo import MongoClient
 
-collection = MongoClient(host='106.13.174.224')['stock']['all_stock']
+collection = MongoClient(host='127.0.0.1')['stock']['all_stock']
 
 def download_data():
     bs.login()
