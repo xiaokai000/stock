@@ -14,12 +14,12 @@ lg = bs.login()
 # 显示登陆返回信息
 
 today = str(date.today())
-yestoday = str(date.today() - timedelta(days=1))
+yestoday = str(date.today() - timedelta(days=30))
 
 
 for item in collection.find():
     stock_name = item['stock_name']
-
+    print(stock_name)
     rs = bs.query_history_k_data_plus(item['_id'],
         "date,code,open,high,low,close,preclose,volume,amount,adjustflag,turn,tradestatus,pctChg,isST",
         start_date=yestoday, end_date=today,
@@ -35,7 +35,20 @@ for item in collection.find():
         i['stock_name'] = stock_name
         _id = i['code'] + '@' + i['date']
         i['_id'] = _id
-        dayStat.update({'_id': _id}, i, upsert=True)
+        try:
+            i['open'] = float(i['open'])
+            i['high'] = float(i['high'])
+            i['low'] = float(i['low'])
+            i['close'] = float(i['close'])
+            i['preclose'] = float(i['preclose'])
+            i['volume'] = float(i['volume'])
+            i['amount'] = float(i['amount'])
+            i['turn'] = float(i['turn'])
+            i['pctChg'] = float(i['pctChg'])
+            i['isST'] = float(i['isST'])
+            dayStat.update({'_id': _id}, i, upsert=True)
+        except:
+            continue
 
 #### 登出系统 ####
 bs.logout()
